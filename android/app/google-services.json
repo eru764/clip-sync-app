@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "639418752677",
+    "project_id": "clipsync-44cea",
+    "storage_bucket": "clipsync-44cea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639418752677:android:74322a5393e965c605774c",
+        "android_client_info": {
+          "package_name": "com.erulight.clip_sync_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639418752677-2gfrkmokp74q1thjtfli1qlnntdt7cgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_mV6FspF6bz_vGYE1Qn5GNobEvxEAIME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639418752677-2gfrkmokp74q1thjtfli1qlnntdt7cgu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "639418752677-maa340qoa0tmefbe4f0cdt33cmnfd6vm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.erulight.clipsync"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639418752677:android:f9171d0558dec6e805774c",
+        "android_client_info": {
+          "package_name": "com.erulight.clipsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639418752677-2gfrkmokp74q1thjtfli1qlnntdt7cgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_mV6FspF6bz_vGYE1Qn5GNobEvxEAIME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639418752677-2gfrkmokp74q1thjtfli1qlnntdt7cgu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "639418752677-maa340qoa0tmefbe4f0cdt33cmnfd6vm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.erulight.clipsync"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
