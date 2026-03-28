@@ -10,33 +10,36 @@ void main() async {
   
   await dotenv.load();
   
-  // Initialize window manager
-  await windowManager.ensureInitialized();
-  
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(800, 600),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
-  );
-  
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-  
-  // Initialize system tray
-  await _initSystemTray();
+  // Only initialize window manager and tray on Windows
+  if (Platform.isWindows) {
+    // Initialize window manager
+    await windowManager.ensureInitialized();
+    
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(800, 600),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.normal,
+    );
+    
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+    
+    // Initialize system tray
+    await _initSystemTray();
+  }
   
   runApp(const ClipSyncApp());
 }
 
 Future<void> _initSystemTray() async {
+  if (!Platform.isWindows) return;
+  
   // Set tray icon - use app icon from resources
-  String iconPath = Platform.isWindows
-      ? 'windows/runner/resources/app_icon.ico'
-      : 'assets/app_icon.png';
+  String iconPath = 'windows/runner/resources/app_icon.ico';
   
   await trayManager.setIcon(iconPath);
   
@@ -65,10 +68,17 @@ class ClipSyncApp extends StatefulWidget {
   const ClipSyncApp({super.key});
 
   @override
-  State<ClipSyncApp> createState() => _ClipSyncAppState();
+  State<ClipSyncApp> createState() {
+    if (Platform.isWindows) {
+      return _ClipSyncAppWindowsState();
+    } else {
+      return _ClipSyncAppMobileState();
+    }
+  }
 }
 
-class _ClipSyncAppState extends State<ClipSyncApp> with TrayListener, WindowListener {
+// Windows-specific state with tray and window manager
+class _ClipSyncAppWindowsState extends State<ClipSyncApp> with TrayListener, WindowListener {
   @override
   void initState() {
     super.initState();
@@ -85,13 +95,11 @@ class _ClipSyncAppState extends State<ClipSyncApp> with TrayListener, WindowList
 
   @override
   void onTrayIconMouseDown() {
-    // Show window when tray icon is clicked
     windowManager.show();
   }
 
   @override
   void onTrayIconRightMouseDown() {
-    // Show context menu on right click
     trayManager.popUpContextMenu();
   }
 
@@ -108,10 +116,28 @@ class _ClipSyncAppState extends State<ClipSyncApp> with TrayListener, WindowList
 
   @override
   void onWindowClose() async {
-    // Hide to tray instead of closing
     await windowManager.hide();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ClipSync',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      home: const LoginScreen(),
+    );
+  }
+}
+
+// Mobile-specific state without window/tray manager
+class _ClipSyncAppMobileState extends State<ClipSyncApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
