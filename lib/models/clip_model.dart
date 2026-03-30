@@ -15,6 +15,16 @@ class ClipModel {
     required this.expiresAt,
   });
 
+  static DateTime _parseTimestamp(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is String) return DateTime.parse(value);
+    if (value is Map) {
+      final seconds = value['_seconds'] ?? value['seconds'] ?? 0;
+      return DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
+    }
+    return DateTime.now();
+  }
+
   // From JSON
   factory ClipModel.fromJson(Map<String, dynamic> json) {
     return ClipModel(
@@ -22,8 +32,8 @@ class ClipModel {
       userId: json['userId'] ?? '',
       content: json['content'] ?? '',
       type: json['type'] ?? 'text',
-      timestamp: DateTime.parse(json['timestamp'] ?? DateTime.now().toIso8601String()),
-      expiresAt: DateTime.parse(json['expiresAt'] ?? DateTime.now().toIso8601String()),
+      timestamp: _parseTimestamp(json['timestamp']),
+      expiresAt: _parseTimestamp(json['expiresAt']),
     );
   }
 

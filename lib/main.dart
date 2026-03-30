@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:tray_manager/tray_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -131,7 +133,7 @@ class _ClipSyncAppWindowsState extends State<ClipSyncApp> with TrayListener, Win
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const AuthCheckScreen(),
     );
   }
 }
@@ -150,7 +152,51 @@ class _ClipSyncAppMobileState extends State<ClipSyncApp> {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const AuthCheckScreen(),
+    );
+  }
+}
+
+// Check for saved token and route accordingly
+class AuthCheckScreen extends StatefulWidget {
+  const AuthCheckScreen({super.key});
+
+  @override
+  State<AuthCheckScreen> createState() => _AuthCheckScreenState();
+}
+
+class _AuthCheckScreenState extends State<AuthCheckScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
+    if (!mounted) return;
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

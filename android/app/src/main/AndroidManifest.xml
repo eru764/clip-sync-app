@@ -1,6 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     
     <application
         android:label="clip_sync_app"
@@ -27,12 +29,52 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        
+        <service
+            android:name=".ClipboardAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true"
+            android:label="ClipSync Clipboard Monitor">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+        
+        <receiver
+            android:name=".ClipboardBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.erulight.clip_sync_app.CLIPBOARD_CHANGED" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver
+            android:name=".SyncActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.erulight.clip_sync_app.SYNC_CLIPBOARD" />
+                <action android:name="com.erulight.clip_sync_app.DISMISS_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+        
+        <service
+            android:name=".ClipboardForegroundService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

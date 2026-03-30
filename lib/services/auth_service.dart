@@ -24,10 +24,12 @@ class AuthService {
         final data = jsonDecode(response.body);
         final idToken = data['idToken'];
         final localId = data['localId'];
+        final refreshToken = data['refreshToken'];
 
-        // Save token and user ID to SharedPreferences
+        // Save token, refresh token, and user ID to SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', idToken);
+        await prefs.setString('refresh_token', refreshToken);
         await prefs.setString('user_id', localId);
 
         return idToken;
@@ -57,10 +59,12 @@ class AuthService {
         final data = jsonDecode(response.body);
         final idToken = data['idToken'];
         final localId = data['localId'];
+        final refreshToken = data['refreshToken'];
 
-        // Save token and user ID to SharedPreferences
+        // Save token, refresh token, and user ID to SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', idToken);
+        await prefs.setString('refresh_token', refreshToken);
         await prefs.setString('user_id', localId);
 
         return idToken;
